@@ -35,4 +35,13 @@ export class MoviesService {
   async getRandomMovies(count: number) {
     return this.prisma.$queryRawUnsafe(`SELECT * FROM "Movie" ORDER BY RANDOM() LIMIT ${count}`);
   }
+
+  async getByIds(ids: number[]) {
+    return this.prisma.movie.findMany({
+      where: {
+        id: { in: ids }
+      }
+    });
+  }
+
 }
