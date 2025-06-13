@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  // output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Movie {
+  id                 Int      @id @default(autoincrement())
+  title              String
+  year               String
+  rated              String?
+  released           String?
+  runtime            String
+  genres             String[]
+  director           String
+  writer             String?
+  actors             String?
+  plot               String?
+  language           String?
+  country            String?
+  awards             String?
+  posterUrl          String
+  posterCloudinaryId String?
+  metascore          String?
+  imdbRating         String?
+  imdbVotes          String?
+  imdbID             String?  @unique
+  type               String?
+  response           Boolean? @default(true)
+  images             String[]
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([imdbID])
+  @@index([title])
+  @@index([year])
+}
