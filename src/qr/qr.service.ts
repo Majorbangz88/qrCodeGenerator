@@ -14,11 +14,11 @@ export class QrService {
   }
 
   private async refreshQrCode() {
+    const baseUrl = process.env.FRONTEND_URL
+
     const randomId = uuidv4();
-    this.currentUrl = `${process.env.BASE_URL}/movies/${randomId}`;
+    this.currentUrl = `${baseUrl}/movies/${randomId}`;
     this.currentQrCode = QRCode.toDataURL(this.currentUrl);
-    console.log(this.currentQrCode)
-    console.log(this.currentUrl)
   }
 
   getCurrentQrCode() {
