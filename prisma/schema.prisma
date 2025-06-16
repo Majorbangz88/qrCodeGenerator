@@ -21,6 +21,7 @@ model Movie {
   rated              String?
   released           String?
   runtime            String
+  comingSoon         Boolean?
   genres             String[]
   director           String
   writer             String?
@@ -34,8 +35,9 @@ model Movie {
   metascore          String?
   imdbRating         String?
   imdbVotes          String?
-  imdbID             String?  @unique
+  imdbID             String?
   type               String?
+  totalSeasons       String?
   response           Boolean? @default(true)
   images             String[]
   createdAt          DateTime @default(now())
