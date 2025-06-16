@@ -2,36 +2,29 @@ import { Injectable } from '@nestjs/common';
 import { MoviesService } from '../movies/movies.service';
 import * as QRCode from 'qrcode';
 import { v4 as uuidv4 } from 'uuid';
-import { Movie } from '@prisma/client';
 
 @Injectable()
 export class QrService {
-  private qrMap = new Map<string, number[]>();
+  private currentQrCode: string;
+  private currentUrl: string;
 
-  constructor(private moviesService: MoviesService) {
-    this.startGenerating();
+  constructor(private readonly moviesService: MoviesService) {
+    this.refreshQrCode();
+    setInterval(() => this.refreshQrCode(), 10000); // Refresh every 10 seconds
   }
 
-  private async startGenerating() {
-    setInterval(async () => {
-      const uuid = uuidv4();
-      const movies: Movie[] = await this.moviesService.getRandom10Movies(10);
-      const movieIds = movies.map((movie) => movie.id);
-      this.qrMap.set(uuid, movieIds);
-
-      console.log(`Generated QR: ${uuid}`);
-    }, 10000);
+  private async refreshQrCode() {
+    const randomId = uuidv4();
+    this.currentUrl = `${process.env.BASE_URL}/movies/${randomId}`;
+    this.currentQrCode = QRCode.toDataURL(this.currentUrl);
+    console.log(this.currentQrCode)
+    console.log(this.currentUrl)
   }
 
-  async getCurrentQr() {
-    const latestUuid = Array.from(this.qrMap.keys()).pop();
-    if (!latestUuid) return null;
-    const link = `${process.env.BASE_URL}/movies/${latestUuid}`;
-    const qrCode = QRCode.toDataURL(link);
-    return qrCode;
-  }
-
-  getMovieIds(uuid: string) {
-    return this.qrMap.get(uuid);
+  getCurrentQrCode() {
+    return {
+      qrCode: this.currentQrCode,
+      url: this.currentUrl
+    };
   }
 }
