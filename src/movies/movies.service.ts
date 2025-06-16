@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import cloudinary from '../utils/cloudinary';
 import { CreateMovieDto } from './dtos/create-movie.dto';
+import { Movie } from '@prisma/client';
 
 @Injectable()
 export class MoviesService {
@@ -22,7 +23,7 @@ export class MoviesService {
       imageUrls.push(upload.secure_url);
     }
 
-    return await this.prisma.movie.create({
+    return this.prisma.movie.create({
       data: {
         ...data,
         posterUrl: posterUpload.secure_url,
@@ -32,11 +33,24 @@ export class MoviesService {
     });
   }
 
-  async getRandomMovies(count: number) {
-    return this.prisma.$queryRawUnsafe(`SELECT * FROM "Movie" ORDER BY RANDOM() LIMIT ${count}`);
+  async getRandom10Movies(count: number): Promise<Movie[]> {
+    return this.prisma.movie.findMany({
+      take: count,
+      orderBy: { id: 'asc' }, // or random logic
+    });
   }
 
-  async getByIds(ids: number[]) {
+  // async getRandom10Movies(count: number) {
+  //   return this.prisma.$queryRawUnsafe(`SELECT * FROM "Movie" ORDER BY RANDOM() LIMIT ${count}`);
+  // }
+
+  async getMovieById(id: number) {
+    return this.prisma.movie.findUnique({
+      where: { id }
+    });
+  }
+
+  async getMoviesByIds(ids: number[]) {
     return this.prisma.movie.findMany({
       where: {
         id: { in: ids }

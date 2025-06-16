@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { MoviesService } from '../movies/movies.service';
 import * as QRCode from 'qrcode';
 import { v4 as uuidv4 } from 'uuid';
+import { Movie } from '@prisma/client';
 
 @Injectable()
 export class QrService {
@@ -14,8 +15,8 @@ export class QrService {
   private async startGenerating() {
     setInterval(async () => {
       const uuid = uuidv4();
-      const movies = await this.moviesService.getRandomMovies(10);
-      const movieIds = movies.map((movie: any) => movie.id);
+      const movies: Movie[] = await this.moviesService.getRandom10Movies(10);
+      const movieIds = movies.map((movie) => movie.id);
       this.qrMap.set(uuid, movieIds);
 
       console.log(`Generated QR: ${uuid}`);
@@ -26,7 +27,7 @@ export class QrService {
     const latestUuid = Array.from(this.qrMap.keys()).pop();
     if (!latestUuid) return null;
     const link = `${process.env.BASE_URL}/movies/${latestUuid}`;
-    const qrCode = await QRCode.toDataURL(link);
+    const qrCode = QRCode.toDataURL(link);
     return qrCode;
   }
 

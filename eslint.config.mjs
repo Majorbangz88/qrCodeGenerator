@@ -1,8 +1,8 @@
 // @ts-check
 import eslint from '@eslint/js';
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
-import globals from 'globals';
 import tseslint from 'typescript-eslint';
+import prettierPlugin from 'eslint-plugin-prettier';
+import globals from 'globals';
 
 export default tseslint.config(
   {
@@ -11,18 +11,19 @@ export default tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
   {
-    // Modified prettier configuration
     plugins: {
-      prettier: eslintPluginPrettierRecommended.configs.recommended.plugins.prettier,
+      prettier: prettierPlugin,
     },
     rules: {
-      ...eslintPluginPrettierRecommended.configs.recommended.rules,
       'prettier/prettier': [
         'error',
         {
-          endOfLine: 'auto', // Add this line to handle line endings automatically
+          endOfLine: 'auto', // Handle line endings automatically
         },
       ],
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-floating-promises': 'warn',
+      '@typescript-eslint/no-unsafe-argument': 'warn',
     },
   },
   {
@@ -36,13 +37,6 @@ export default tseslint.config(
         projectService: true,
         tsconfigRootDir: import.meta.dirname,
       },
-    },
-  },
-  {
-    rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-floating-promises': 'warn',
-      '@typescript-eslint/no-unsafe-argument': 'warn'
     },
   },
 );
