@@ -10,7 +10,7 @@ export class QrService {
 
   constructor(private readonly moviesService: MoviesService) {
     this.refreshQrCode();
-    setInterval(() => this.refreshQrCode(), 10000); // Refresh every 10 seconds
+    setInterval(() => this.refreshQrCode(), 10000);
   }
 
   private async refreshQrCode() {
