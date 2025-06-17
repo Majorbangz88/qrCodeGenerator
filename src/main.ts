@@ -8,7 +8,7 @@ async function bootstrap() {
 
   app.enableCors({
     origin: [
-      'https://qrcode-frontend-oyyh.onrender.com/',
+      'https://qrcode-frontend-oyyh.onrender.com',
       'http://localhost:3000'
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
